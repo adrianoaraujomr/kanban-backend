@@ -1,0 +1,48 @@
+# Decisão pessoal
+.local/
+
+# Diretórios e arquivos do Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Diretórios e arquivos relacionados a virtualenvs
+venv/
+env/
+ENV/
+.venv/
+*.egg-info/
+
+# Configurações de IDEs e editores de texto
+.vscode/
+.idea/
+*.swp
+*~
+
+# Arquivos de log e temporários
+*.log
+*.tmp
+*.bak
+*.pid
+*.seed
+*.cover
+*.lock
+*.spec
+
+# Arquivos de banco de dados locais
+*.sqlite3
+*.db
+
+# Configurações sensíveis ou específicas de ambiente
+.env
+*.env.*
+
+# Arquivos relacionados ao Alembic
+migrations/versions/*.pyc
+migrations/versions/__pycache__/
+migrations/versions/*.py[co]
+
+# Arquivos gerados pelo Flask
+instance/
+*.config.json
+*.settings
