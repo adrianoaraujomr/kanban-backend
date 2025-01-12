@@ -43,9 +43,19 @@ $ flask --app src/main --debug run // rodar projeto
     - Manualmente (```alembic revision -m [message]```)
 * Commitar mudança no banco (```alembic upgrade head```)
 
-## Authentication
+## Authentication [[2]](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)
+
+* JWT Authentication
+* Instalar dependencias ```pip install flask-bcrypt Flask-JWT-Extended```
+* Instanciar jwt e setar as chaves ```main.py```
+* Adicionar annotation a rotas que devem ser protegidas ```@jwt_required```
+* Criar rota de login ```api/usuario/usuarioRoute.py```
+    - Essa rota vai comparar a senha enviada com a salva no banco (salva como hash, para questão de segurança)
+    - Se o login houver sucesso retorna um token
+
 ## Authorization
 
 # Refs
 
 [1] - https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a
+[2] - https://www.freecodecamp.org/news/jwt-authentication-in-flask/
