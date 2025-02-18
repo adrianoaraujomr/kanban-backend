@@ -19,7 +19,6 @@ def list_users_route():
 
 
 @usuario_route.route("/", methods=["POST"])
-@jwt_required()
 def create_user_route():
     content = request.json
     result = create_user(content)

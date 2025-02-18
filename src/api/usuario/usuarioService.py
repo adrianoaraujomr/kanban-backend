@@ -15,9 +15,9 @@ def login(content):
                 "token": access_token,
             }
         else:
-            raise Exception("Access denied")
+            raise Exception("Wrong password")
     except:
-        raise Exception("Access denied")
+        raise Exception("Someghint went wrong")
 
 def list_users():
     users = User.query.all()
