@@ -1,36 +1,40 @@
-## Comandos
+## Rodar projeto
+
+### Pré requisitos
+
+- Python estar instalado
+- Instalar os pacotes contidos no `requirements.txt` (`pip install flask` [Obs.: se fazer uso do pyenv ativar o env antes de rodar, senão primeiro comando não é necessário])
+- Preencher valores do `.env.example` e renomea-lo para `.env`
+- Banco de dados estar rodando de acordo com valores do `.env`
+
+### Comandos
 
 ```
-$ alembic upgrade head // inicia banco de dados
-$ flask --app src/main --debug run // rodar projeto
+$ pyenv activate [nome env]
+$ alembic upgrade head
+$ flask --app src/main --debug run
 ```
 
-## Configuração inicial
+## Como Criar Projeto do Zero
 
-- Criar um virtualenv
-- Usar o virtual env para instalar as dependências necessárias (`pip install flask`)
-- Desta forma os pacotes do python ficaram disponivel so neste ambiente
-
-## Criar Projeto
-
-- Criar o arquivo principal, onde a aplicação será instanciada (`main.py`)
+- Criar o arquivo principal, onde a aplicação será instanciada (`main.py`) [[1]](https://flask.palletsprojects.com/en/stable/quickstart/)
 - O arquivo principal já basta para a aplicação funcionar, em seguida as rotas podem ser definidas
   - As rotas tbm podem ser diretamente setadas na main
-  - Blueprint, criar um arquivo com a blueprint e suas rotas (`routes/*.py`) e registrar a blueprint na main (`main.py`)
+  - Blueprint, criar um arquivo com a blueprint e suas rotas (`routes/*.py`) e registrar a blueprint na main (`main.py`) [[2]](https://flask.palletsprojects.com/en/stable/blueprints/)
 
-## Environment Variables
+### Environment Variables
 
 - Instalar dependecias (`pip install python-dotenv`)
 - Criar arquivo env (`.env`)
 
-## Conexão com Banco de Dados
+### Conexão com Banco de Dados
 
 - Instalar dependencias (`pip install sqlalchemy pg8000`)
 - `sqlalchemy` para ORM e `pg8000` driver do banco usado
 - Criar um arquivo para conectar ao banco (`database.py`)
   - Também pode ser feito no arquivo principal (`main.py`)
 
-## Migrations [[1]](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
+### Migrations [[3]](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
 
 - Adicionar a biblioteca de migrations ao projeto (`pip install alembic`)
 - Iniciar o alembic para criar a pasta de migrations (`alembic init migrations`)
@@ -44,7 +48,7 @@ $ flask --app src/main --debug run // rodar projeto
   - Manualmente (`alembic revision -m [message]`)
 - Commitar mudança no banco (`alembic upgrade head`)
 
-## Authentication [[2]](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)
+### Authentication [[4]](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)
 
 - JWT Authentication
 - Instalar dependencias `pip install flask-bcrypt Flask-JWT-Extended`
@@ -54,15 +58,17 @@ $ flask --app src/main --debug run // rodar projeto
   - Essa rota vai comparar a senha enviada com a salva no banco (salva como hash, para questão de segurança)
   - Se o login houver sucesso retorna um token
 
-## Authorization
+### Authorization
 
-## Testes (\*)
+### Testes (\*)
 
-## Docker
+### Docker
 
-## CI/CD
+### CI/CD
 
 # Refs
 
-[1] - https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a
-[2] - https://www.freecodecamp.org/news/jwt-authentication-in-flask/
+[[1] https://flask.palletsprojects.com/en/stable/quickstart/](https://flask.palletsprojects.com/en/stable/quickstart/)  
+[[2] https://flask.palletsprojects.com/en/stable/blueprints/](https://flask.palletsprojects.com/en/stable/blueprints/)  
+[[3] https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)  
+[[4] https://www.freecodecamp.org/news/jwt-authentication-in-flask/](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)
