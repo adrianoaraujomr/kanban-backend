@@ -58,17 +58,67 @@ $ flask --app src/main --debug run
   - Essa rota vai comparar a senha enviada com a salva no banco (salva como hash, para questão de segurança)
   - Se o login houver sucesso retorna um token
 
-### Authorization
+### Authorization (TBD)
 
-### Testes (\*)
+### Testes [[5]](https://flask.palletsprojects.com/en/stable/testing/)[[6]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[7]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[10]](https://testdriven.io/blog/flask-pytest/)
 
-### Docker
+- Adicionar a biblioteca pytest ao projeto (`pip install pytest`)
+- Em seguida é criado um diretório em que os testes serão armazenados (`/test`)
+- O pytest irá buscar e rodar todos os arquivos no seguinte formatos (`test_*.py`, `*_test.py`)
+- Para rodar todos os testes basta usar o comando `pytest`
+- Criar um novo arquivo `.env` para as variaveis de teste [[9]](https://pytest-with-eric.com/pytest-best-practices/pytest-environment-variables/)
+- O arquivos `/test/conftest.py` define as fixtures, que serão pedaçõs de código que o pytest rodara automaticamente
+  - Ou seja ao fazer a configuração da aplicação no `conftest.py` o pytest cuidara de tudo automaticamente
 
-### CI/CD
+#### Banco de dados
+
+- Em mémoria (SQLite)
+- Banco de teste
+  - Criar e destruir para cada grupo de teste (`@pytest.fixture` com o uso de `Base.metada.create_all`)
+  - Limpar banco de dados para cada grupo de teste (`@pytest.fixture` com o uso de `Base.metada.drop_all`, `scope` da fixture define se esse grupo vai ser classes ou métodos)
+  - Definir um novo valor para as variáveis de banco do `.env`
+
+#### Mocking (TBD)
+
+- Codigo criado para substituir servicos de terceiros, requisições na hora de testar
+
+#### Unit tests [[6]](https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing)[[8]](https://www.ramotion.com/blog/what-is-backend-testing/#:~:text=Backend%20testing%20involves%20testing%20these,other%20systems%2C%20and%20server%20configurations.)
+
+- Testam, metodos, classes e compenentes
+- Devem ser leves
+- Testes de lógica de código
+- Ex.: `test/test_unit.py`
+
+#### Integration tests [[6]](https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing)[[8]](https://www.ramotion.com/blog/what-is-backend-testing/#:~:text=Backend%20testing%20involves%20testing%20these,other%20systems%2C%20and%20server%20configurations.)
+
+- Verifica se a conexão de diferentes componentes da aplicação funcionam
+- Por exemplo, integração com o banco de dados
+- Microserviços funcioname como esperado
+
+#### Functional tests [[6]](https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing)[[8]](https://www.ramotion.com/blog/what-is-backend-testing/#:~:text=Backend%20testing%20involves%20testing%20these,other%20systems%2C%20and%20server%20configurations.)
+
+- Um superset do integration
+- Por exemplo, além de verificar a conexão com o banco de dados verificar se uma query funciona como esperado
+- Ex.: `test/test_login.py`
+
+#### End to End tests [[6]](https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing)[[8]](https://www.ramotion.com/blog/what-is-backend-testing/#:~:text=Backend%20testing%20involves%20testing%20these,other%20systems%2C%20and%20server%20configurations.)
+
+- Muito caros
+- Replica o comportamento de um usuário com todo o ambiente da aplicação
+
+### Docker (TBD)
+
+### CI/CD (TBD)
 
 # Refs
 
 [[1] https://flask.palletsprojects.com/en/stable/quickstart/](https://flask.palletsprojects.com/en/stable/quickstart/)  
 [[2] https://flask.palletsprojects.com/en/stable/blueprints/](https://flask.palletsprojects.com/en/stable/blueprints/)  
 [[3] https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)  
-[[4] https://www.freecodecamp.org/news/jwt-authentication-in-flask/](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)
+[[4] https://www.freecodecamp.org/news/jwt-authentication-in-flask/](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)  
+[[5] https://flask.palletsprojects.com/en/stable/testing/](https://flask.palletsprojects.com/en/stable/testing/)  
+[[6] https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing](https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing)  
+[[7] https://www.digitalocean.com/community/tutorials/unit-test-in-flask](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)  
+[[8] https://www.ramotion.com/blog/what-is-backend-testing/#:~:text=Backend%20testing%20involves%20testing%20these,other%20systems%2C%20and%20server%20configurations.](https://www.ramotion.com/blog/what-is-backend-testing/#:~:text=Backend%20testing%20involves%20testing%20these,other%20systems%2C%20and%20server%20configurations.)  
+[[9] https://pytest-with-eric.com/pytest-best-practices/pytest-environment-variables/](https://pytest-with-eric.com/pytest-best-practices/pytest-environment-variables/)
+[[10] https://testdriven.io/blog/flask-pytest/](https://testdriven.io/blog/flask-pytest/)
