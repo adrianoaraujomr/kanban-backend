@@ -36,6 +36,7 @@ ENV/
 # Configurações sensíveis ou específicas de ambiente
 .env
 *.env.*
+!.env.example
 
 # Arquivos relacionados ao Alembic
 migrations/versions/*.pyc

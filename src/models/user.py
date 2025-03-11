@@ -17,4 +17,4 @@ class User(Base):
         self.avatar = avatar
 
     def __repr__(self):
-        return f"<User {self.name!r}>"
+        return f"<User name={self.name!r}, email={self.email!r}, password={self.password!r}>"
