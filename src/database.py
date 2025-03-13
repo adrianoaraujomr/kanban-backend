@@ -13,6 +13,11 @@ def create_db():
     db_user = os.getenv("DB_USER")
     db_password = os.getenv("DB_PASSWORD")
 
+    print('--------------------------------------------')
+    print('Connect to:')
+    print(f"postgresql+pg8000://{db_user}:{db_password}@{db_host}/{db_name}")
+    print('--------------------------------------------')
+
     engine = create_engine(f"postgresql+pg8000://{db_user}:{db_password}@{db_host}/{db_name}", client_encoding="utf8")
     Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
