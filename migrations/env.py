@@ -24,7 +24,12 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 load_dotenv()
 target_metadata = Base.metadata
-config.set_main_option("sqlalchemy.url", os.getenv("DB_URI"))
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
+config.set_main_option("sqlalchemy.url", f"postgresql+pg8000://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

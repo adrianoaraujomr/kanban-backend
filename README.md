@@ -1,4 +1,4 @@
-## Rodar projeto
+# Rodar projeto
 
 ### Pré requisitos
 
@@ -106,7 +106,38 @@ $ flask --app src/main --debug run
 - Muito caros
 - Replica o comportamento de um usuário com todo o ambiente da aplicação
 
-### Docker (TBD)
+### Docker [[11]](https://www.freecodecamp.org/news/how-to-dockerize-a-flask-app/)
+
+- Criar `Dockerfile`
+- Seleciona versão do python (`FROM`)
+- Criar um diretório dentro do container para armazenar a aplicação e executar os comandos (`WORKDIR`)
+- Copia `requirements.txt` para dentro do container e instala as dependencias (`COPY`)
+  - Isso é feito para aproveitar o cache do docker. Se algum arquivo do projeto for mudado os pacotes do requirements não mudam.
+  - Obs.: O `COPY` não copia arquivos ocultos
+- Em seguida se copia o projeto para o container (`COPY`)
+- Usar `EXPOSE` para expor uma porta da container
+- Por último é adicionado o comando para rodar a aplicação (`RUN`)
+
+```
+$ docker build --tag [nome imagem] . # Monta a imagem
+```
+
+#### Docker Compose [[12]](https://blog.teclado.com/run-flask-apps-with-docker-compose/)[[13]](https://docs.docker.com/reference/compose-file/)
+
+- Criar `docker-compose.yml`
+- `version`: Escolher a versão do composer
+- `services`: Os containers
+  - `image`: Imagem usada como base, pode ser mudado para `build: .` para imagens locais.
+  - `ports`: Mapeia porta do container, para a máquina. Possibilita acessar por localhost.
+  - `depends_on`: Indica que um serviço so será iniciado depois que outro já estiver iniciado.
+  - `volumes`: ????
+  - `network`: Adiciona o serviço a rede, que possibilita comunicar com outros containers.
+  - `enviroment`/`env_file`: Adiciona váriaveis de sistema ao container (arquivos .env não são copiados para o container)
+- `networks`: Cria uma rede Docker.
+- Para que o alembic execute a migração se adiciona um `command` para que as migrations sejam executas antes de executar a aplicação [[14]](https://stackoverflow.com/questions/68225845/how-to-autogenerate-and-apply-migrations-with-alembic-when-the-database-runs-in)
+- Possiveis problemas:
+  - DB_HOST, host do db muda ao se containarizar. Geralmente seria localhost, mas na docker network a aplicação acessa pelo nome do serviço `db`
+  - Ao inicializar o flask é preciso liberar para aceitar conexões não apenas do localhost (`host=0.0.0.0`). Já que se quiser acessar o container dá máquina esse endereço não é entendido como localhost dentro do container
 
 ### CI/CD (TBD)
 
@@ -120,5 +151,9 @@ $ flask --app src/main --debug run
 [[6] https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing](https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing)  
 [[7] https://www.digitalocean.com/community/tutorials/unit-test-in-flask](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)  
 [[8] https://www.ramotion.com/blog/what-is-backend-testing/#:~:text=Backend%20testing%20involves%20testing%20these,other%20systems%2C%20and%20server%20configurations.](https://www.ramotion.com/blog/what-is-backend-testing/#:~:text=Backend%20testing%20involves%20testing%20these,other%20systems%2C%20and%20server%20configurations.)  
-[[9] https://pytest-with-eric.com/pytest-best-practices/pytest-environment-variables/](https://pytest-with-eric.com/pytest-best-practices/pytest-environment-variables/)
-[[10] https://testdriven.io/blog/flask-pytest/](https://testdriven.io/blog/flask-pytest/)
+[[9] https://pytest-with-eric.com/pytest-best-practices/pytest-environment-variables/](https://pytest-with-eric.com/pytest-best-practices/pytest-environment-variables/)  
+[[10] https://testdriven.io/blog/flask-pytest/](https://testdriven.io/blog/flask-pytest/)  
+[[11] https://www.freecodecamp.org/news/how-to-dockerize-a-flask-app/](https://www.freecodecamp.org/news/how-to-dockerize-a-flask-app/)  
+[[12] https://blog.teclado.com/run-flask-apps-with-docker-compose/](https://blog.teclado.com/run-flask-apps-with-docker-compose/)  
+[[13] https://docs.docker.com/reference/compose-file/](https://docs.docker.com/reference/compose-file/)  
+[[14] https://stackoverflow.com/questions/68225845/how-to-autogenerate-and-apply-migrations-with-alembic-when-the-database-runs-in](https://stackoverflow.com/questions/68225845/how-to-autogenerate-and-apply-migrations-with-alembic-when-the-database-runs-in)
