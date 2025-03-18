@@ -52,9 +52,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      #- name: Wait for PostgreSQL
-      #  run: |
-      #    timeout 30s bash -c 'until pg_isready -h postgres -p 5432; do sleep 2; done'
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update && apt-get install -y postgresql-client
+
+      - name: Wait for PostgreSQL
+        run: |
+          timeout 30s bash -c 'until pg_isready -h postgres -p 5432; do sleep 2; done'
 
       - name: Initialize database
         run: |
