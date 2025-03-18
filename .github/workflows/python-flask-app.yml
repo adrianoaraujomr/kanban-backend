@@ -55,7 +55,7 @@ jobs:
           DB_USER: ${{ vars.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: postgres
-          DB_PORT: 5432
+          DB_PORT: 5234
           DB_NAME: ${{ vars.DB_NAME }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
