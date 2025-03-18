@@ -30,9 +30,22 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+    env:
+      DB_USER: ${{ vars.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_HOST: postgres
+      DB_PORT: 5234
+      DB_NAME: ${{ vars.DB_NAME }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      - name: Check some envs
+        run: |
+          echo $DB_USER
 
       - name: Install dependencies
         run: |
@@ -50,12 +63,3 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
-
-        env:
-          DB_USER: ${{ vars.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: postgres
-          DB_PORT: 5234
-          DB_NAME: ${{ vars.DB_NAME }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
