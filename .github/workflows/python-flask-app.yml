@@ -22,7 +22,7 @@ jobs:
         image: postgres
         env:
           POSTGRES_USER: ${{ vars.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secret.DB_PASSWORD }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: ${{ vars.DB_NAME }}
         options: >-
           --health-cmd pg_isready
@@ -53,9 +53,9 @@ jobs:
 
         env:
           DB_USER: ${{ vars.DB_USER }}
-          DB_PASSWORD: ${{ secret.DB_PASSWORD }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: postgres
           DB_PORT: 5432
           DB_NAME: ${{ vars.DB_NAME }}
-          SECRET_KEY: ${{ secret.SECRET_KEY }}
-          JWT_SECRET_KEY: ${{ secret.JWT_SECRET_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
