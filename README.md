@@ -139,7 +139,37 @@ $ docker build --tag [nome imagem] . # Monta a imagem
   - DB_HOST, host do db muda ao se containarizar. Geralmente seria localhost, mas na docker network a aplicação acessa pelo nome do serviço `db`
   - Ao inicializar o flask é preciso liberar para aceitar conexões não apenas do localhost (`host=0.0.0.0`). Já que se quiser acessar o container dá máquina esse endereço não é entendido como localhost dentro do container
 
-### CI/CD (TBD)
+### CI/CD [[15]](https://www.redhat.com/pt-br/topics/devops/what-is-ci-cd)[[16]](https://github.com/resources/articles/devops/ci-cd)
+
+- Integração contínua (CI)
+- Entrega contínua (CD)
+- Prática para melhorar o desenvolvimento de software
+- Automatização de build, testing e deploy
+- DevOps automation
+- No GitHub é o GitHub Actions
+
+#### CI (GitHub Actions) [[17]](https://docs.github.com/pt/actions/about-github-actions/understanding-github-actions)
+
+- Build, testa e adiciona automaticamente código a um repositório
+- O objetivo desse workflow é impedir um merge no caso de as alterações quebrarem um dos testes
+- Criar um novo workflow [[18]](https://docs.github.com/en/actions/writing-workflows/quickstart)
+  - Criar a partir de um template no GitHub (Repository -> Actions -> new workflow)
+  - Criar um novo arquivo `.yml` em `/.github/workflows`
+- Adicionar service do banco de dados [[19]](https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers)
+- Váriaveis env [[20]](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)
+  - Possui diferentes níveis: organization, repository e environment
+  - Adicionar secrets e variables no repository (Repository -> Settings -> Secrets and variables -> Actions)
+  - Para acessar o valor das váriaveis bastar usar `${{ vars.*** }}` e `${{ secrets.*** }}`
+- `steps` vai ditar a ordem de execução das atividades do job
+  - `name` é o nome do `step`
+  - `uses` referência uma ação reutilizavel
+  - `run` define comandos a serem rodados
+- Steps necessários
+  - Instalar dependências
+  - Instalar PostgresqlCliente (Objetivo desse passo é usar o cliente para esperar o postgres stanciar)
+  - Aguardar o postgres subir
+  - Inicializar o banco de dados
+  - Testar a aplicação
 
 # Refs
 
@@ -156,4 +186,10 @@ $ docker build --tag [nome imagem] . # Monta a imagem
 [[11] https://www.freecodecamp.org/news/how-to-dockerize-a-flask-app/](https://www.freecodecamp.org/news/how-to-dockerize-a-flask-app/)  
 [[12] https://blog.teclado.com/run-flask-apps-with-docker-compose/](https://blog.teclado.com/run-flask-apps-with-docker-compose/)  
 [[13] https://docs.docker.com/reference/compose-file/](https://docs.docker.com/reference/compose-file/)  
-[[14] https://stackoverflow.com/questions/68225845/how-to-autogenerate-and-apply-migrations-with-alembic-when-the-database-runs-in](https://stackoverflow.com/questions/68225845/how-to-autogenerate-and-apply-migrations-with-alembic-when-the-database-runs-in)
+[[14] https://stackoverflow.com/questions/68225845/how-to-autogenerate-and-apply-migrations-with-alembic-when-the-database-runs-in](https://stackoverflow.com/questions/68225845/how-to-autogenerate-and-apply-migrations-with-alembic-when-the-database-runs-in)  
+[[15] https://www.redhat.com/pt-br/topics/devops/what-is-ci-cd](https://www.redhat.com/pt-br/topics/devops/what-is-ci-cd)  
+[[16] https://github.com/resources/articles/devops/ci-cd](https://github.com/resources/articles/devops/ci-cd)  
+[[17] https://docs.github.com/pt/actions/about-github-actions/understanding-github-actions](https://docs.github.com/pt/actions/about-github-actions/understanding-github-actions)  
+[[18] https://docs.github.com/en/actions/writing-workflows/quickstart](https://docs.github.com/en/actions/writing-workflows/quickstart)  
+[[19] https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers](https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers)  
+[[20] https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)
