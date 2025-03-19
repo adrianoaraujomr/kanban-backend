@@ -43,10 +43,6 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Check some envs
-        run: |
-          echo $DB_USER
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
