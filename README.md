@@ -50,7 +50,10 @@ $ flask --app src/main --debug run
 
 ### Authentication [[4]](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)
 
-- JWT Authentication
+#### JWT Authentication [[21]](https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c)
+
+- Forma de autenticação stateless, servidor envia para o cliente um token com informações do usuário
+- Cliente usa esse token na requisição para obter recursos do servidor
 - Instalar dependencias `pip install flask-bcrypt Flask-JWT-Extended`
 - Instanciar jwt e setar as chaves `main.py`
 - Adicionar annotation a rotas que devem ser protegidas `@jwt_required`
@@ -58,7 +61,22 @@ $ flask --app src/main --debug run
   - Essa rota vai comparar a senha enviada com a salva no banco (salva como hash, para questão de segurança)
   - Se o login houver sucesso retorna um token
 
-### Authorization (TBD)
+#### Session Tokens [[21]](https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c)
+
+- Gerados a partir de uma autenticação bem suceidada e armazenada no servidor
+- Token é associado a uma sessão do cliente (session ID armazenada em coockie)
+
+### Authorization [[22]](https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).)
+
+#### Role-Based Access Control (RBAC) [[23]](https://www.redhat.com/en/topics/security/what-is-role-based-access-control)
+
+- Usuários acessam recursos de acordo com uma role
+- Role define quais ações/recursos podem ser realizadas/acessados
+- Usuários possuem uma ou mais roles
+- Cada role possui certas permissões
+- Usuário ganha permissões de acordo com as roles designadas
+
+#### Attribute-Based Access Control (ABAC)
 
 ### Testes [[5]](https://flask.palletsprojects.com/en/stable/testing/)[[6]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[7]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[10]](https://testdriven.io/blog/flask-pytest/)
 
@@ -192,4 +210,7 @@ $ docker build --tag [nome imagem] . # Monta a imagem
 [[17] https://docs.github.com/pt/actions/about-github-actions/understanding-github-actions](https://docs.github.com/pt/actions/about-github-actions/understanding-github-actions)  
 [[18] https://docs.github.com/en/actions/writing-workflows/quickstart](https://docs.github.com/en/actions/writing-workflows/quickstart)  
 [[19] https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers](https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers)  
-[[20] https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)
+[[20] https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)  
+[[21] https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c](https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c)
+[[22] https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).](<https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).>)
+[[23] https://www.redhat.com/en/topics/security/what-is-role-based-access-control](https://www.redhat.com/en/topics/security/what-is-role-based-access-control)

@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from flask_jwt_extended import get_jwt_identity
 from sqlalchemy import select
@@ -19,7 +20,8 @@ def list_to_do_card():
         } for card in cards]
 
 def create_to_do_card(content):
-    user_creator_id = int(get_jwt_identity())
+    user_identity = json.loads(get_jwt_identity())
+    user_creator_id = user_identity["id"]
     new_card = ToDoCard(
         title=content["title"], 
         status=content["status"], 
