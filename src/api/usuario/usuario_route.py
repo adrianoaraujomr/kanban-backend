@@ -2,6 +2,7 @@ import json
 from flask import Blueprint, Response, request
 from flask_jwt_extended import jwt_required
 from src.api.usuario.usuario_service import list_users, create_user, login
+from src.decorators.auth import role_authorization
 
 usuario_route = Blueprint("usuario", __name__)
 
@@ -13,6 +14,7 @@ def login_user_route():
 
 @usuario_route.route("/", strict_slashes=False)
 @jwt_required()
+@role_authorization("admin")
 def list_users_route():
     result = list_users()
     return Response(json.dumps(result), status=200, mimetype="application/json")

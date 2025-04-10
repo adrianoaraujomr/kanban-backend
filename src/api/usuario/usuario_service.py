@@ -1,4 +1,5 @@
 import hashlib
+import json
 from flask_jwt_extended import create_access_token
 from sqlalchemy import select
 
@@ -17,7 +18,8 @@ def login(content):
                 raise Exception("Wrong username or password")
             hash_sent = hashlib.sha512(content["password"].encode()).hexdigest()
             if hash_sent == user.password:
-                access_token = create_access_token(identity=str(user.id)) ## Tem de ser uma string
+                user_identity = json.dumps({"id": user.id, "roles": [role.id for role in user.roles]})
+                access_token = create_access_token(identity=user_identity)
                 return {
                     "email": user.email,
                     "token": access_token,
