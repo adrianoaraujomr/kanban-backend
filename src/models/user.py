@@ -1,6 +1,13 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Table
+from sqlalchemy.orm import relationship
 from .base import Base
 
+user_roles = Table(
+    "user_roles",
+    Base.metadata,
+    Column("id_user", Integer, ForeignKey("users.id"), primary_key=True),
+    Column("id_role", String(50), ForeignKey("roles.id"), primary_key=True),
+)
 
 class User(Base):
     __tablename__ = "users"
@@ -18,3 +25,6 @@ class User(Base):
 
     def __repr__(self):
         return f"<User name={self.name!r}, email={self.email!r}, password={self.password!r}>"
+    
+from src.models.role import Role
+User.roles = relationship("Role", secondary="user_roles")

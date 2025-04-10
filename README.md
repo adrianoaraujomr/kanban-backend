@@ -76,6 +76,15 @@ $ flask --app src/main --debug run
 - Cada role possui certas permissões
 - Usuário ganha permissões de acordo com as roles designadas
 
+##### Implementação [[25]](https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6)
+
+- Criar as roles `src/models/role.py`
+- No caso de tabela criar o relacionamento dela com a tabela de Usuário `src/models/user.py`
+  - Criar a tabela intermediária entre role e usuario `user_roles`
+  - Adicionar no Usuário um atributo que lista suas roles `User.roles`
+- Criar decorator para filtrar recursos de acordo com role `src/decorators/auth.py`
+- Obs.: Decorators são um padrão de programação usados para adicionar funcionalidades a funções sem alterar suas estruturas [[26]](https://www.datacamp.com/tutorial/decorators-python)
+
 #### Attribute-Based Access Control (ABAC)
 
 ### Testes [[5]](https://flask.palletsprojects.com/en/stable/testing/)[[6]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[7]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[10]](https://testdriven.io/blog/flask-pytest/)
@@ -211,6 +220,9 @@ $ docker build --tag [nome imagem] . # Monta a imagem
 [[18] https://docs.github.com/en/actions/writing-workflows/quickstart](https://docs.github.com/en/actions/writing-workflows/quickstart)  
 [[19] https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers](https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers)  
 [[20] https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)  
-[[21] https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c](https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c)
-[[22] https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).](<https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).>)
-[[23] https://www.redhat.com/en/topics/security/what-is-role-based-access-control](https://www.redhat.com/en/topics/security/what-is-role-based-access-control)
+[[21] https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c](https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c)  
+[[22] https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).](<https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).>)  
+[[23] https://www.redhat.com/en/topics/security/what-is-role-based-access-control](https://www.redhat.com/en/topics/security/what-is-role-based-access-control)  
+[[24] https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html](https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html)  
+[[25] https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6](https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6)
+[[26] https://www.datacamp.com/tutorial/decorators-python](https://www.datacamp.com/tutorial/decorators-python)

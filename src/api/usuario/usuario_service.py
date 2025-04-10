@@ -18,8 +18,8 @@ def login(content):
                 raise Exception("Wrong username or password")
             hash_sent = hashlib.sha512(content["password"].encode()).hexdigest()
             if hash_sent == user.password:
-                user_identity = json.dumps({"id": user.id})
-                access_token = create_access_token(identity=user_identity) ## Tem de ser uma string
+                user_identity = json.dumps({"id": user.id, "roles": [role.id for role in user.roles]})
+                access_token = create_access_token(identity=user_identity)
                 return {
                     "email": user.email,
                     "token": access_token,
