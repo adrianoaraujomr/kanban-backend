@@ -16,16 +16,9 @@ services:
       - kanban_network
 
   db:
-    image: postgres
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      retries: 5
-      start_period: 5s
+    extends:
+      file: infra.yml
+      service: db
     networks:
       - kanban_network
 

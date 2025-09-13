@@ -1,6 +1,10 @@
 # Decisão pessoal
 .local/
 
+# Volumes docker
+
+postgres_data/
+
 # Diretórios e arquivos do Python
 __pycache__/
 *.py[cod]
