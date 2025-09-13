@@ -16,4 +16,4 @@ def list_cards_route():
 def create_card_route():
     content = request.json
     result = create_to_do_card(content)
-    return Response(json.dumps(result), status=200, mimetype="application/json")
+    return Response(json.dumps(result), status=201, mimetype="application/json")

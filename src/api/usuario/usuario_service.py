@@ -5,29 +5,27 @@ from sqlalchemy import select
 
 from src.database import get_session
 from src.models.user import User
+from src.global_error_handling import WrongUsernameOrPassword, EntityNotFound
 
 def login(content):
-    try: 
-        Session = get_session()
-        with Session() as session:
-            query = select(User).where(User.email == content["username"])
-            user = session.execute(query).first()
-            if user is not None:
-                user = user[0]
-            else:
-                raise Exception("Wrong username or password")
-            hash_sent = hashlib.sha512(content["password"].encode()).hexdigest()
-            if hash_sent == user.password:
-                user_identity = json.dumps({"id": user.id, "roles": [role.id for role in user.roles]})
-                access_token = create_access_token(identity=user_identity)
-                return {
-                    "email": user.email,
-                    "token": access_token,
-                }
-            else:
-                raise Exception("Wrong username or password")
-    except:
-        raise Exception("Something went wrong")
+    Session = get_session()
+    with Session() as session:
+        query = select(User).where(User.email == content["username"])
+        user = session.execute(query).first()
+        if user is not None:
+            user = user[0]
+        else:
+            raise WrongUsernameOrPassword()
+        hash_sent = hashlib.sha512(content["password"].encode()).hexdigest()
+        if hash_sent == user.password:
+            user_identity = json.dumps({"id": user.id, "roles": [role.id for role in user.roles]})
+            access_token = create_access_token(identity=user_identity)
+            return {
+                "email": user.email,
+                "token": access_token,
+            }
+        else:
+            raise WrongUsernameOrPassword()
 
 def list_users():
     Session = get_session()
@@ -38,16 +36,14 @@ def list_users():
 
 
 def get_user_by_id(id):
-    try:
-        Session = get_session()
-        with Session() as session:
-            query = select(User).where(User.id == int(id))
-            user = session.execute(query).first()
-            if user:
-                return user[0]
-            return None
-    except:
-        raise Exception("User don't exist")
+    Session = get_session()
+    with Session() as session:
+        query = select(User).where(User.id == int(id))
+        user = session.execute(query).first()
+        if user:
+            return user[0]
+        else:
+            raise EntityNotFound()
 
 
 def create_user(content):

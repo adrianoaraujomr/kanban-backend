@@ -3,56 +3,92 @@
 ### Pré requisitos
 
 - Python estar instalado
-- Instalar os pacotes contidos no `requirements.txt` (`pip install flask` [Obs.: se fazer uso do pyenv ativar o env antes de rodar, senão primeiro comando não é necessário])
 - Preencher valores do `.env.example` e renomea-lo para `.env`
 - Banco de dados estar rodando de acordo com valores do `.env`
+
+- Obs.: No arquivo infra.yml já possui a configuração de como rodar o banco como docker com os valores presentes em `.env`
+
+```
+$ docker compose -f infra.yml up
+```
+
+- Obs.: Rodando o compose da seguinte forma é util para desenvolvimento já que o comando `docker compose up` vai também subir um docker da própria aplicação
 
 ### Comandos
 
 ```
-$ pyenv activate [nome env]
-$ alembic upgrade head
-$ flask --app src/main --debug run
+$ pyenv activate [nome env]        # (opcional) apenas se tiver pyenv instalado e configurado
+$ pip install -r requirements.txt  # so precisa ser feito a primeira vez que rodar o projeto (instala dependencias)
+$ alembic upgrade head             # rodas as migrations, quando alterar migrations esse comando deve ser rodado
+$ flask --app src/main --debug run # inicia a aplicação
 ```
 
-## Como Criar Projeto do Zero
+# Criar Projeto do Zero
+
+## Flask
+
+### Instanciar aplicação e definir endpoints
 
 - Criar o arquivo principal, onde a aplicação será instanciada (`main.py`) [[1]](https://flask.palletsprojects.com/en/stable/quickstart/)
-- O arquivo principal já basta para a aplicação funcionar, em seguida as rotas podem ser definidas
-  - As rotas tbm podem ser diretamente setadas na main
-  - Blueprint, criar um arquivo com a blueprint e suas rotas (`routes/*.py`) e registrar a blueprint na main (`main.py`) [[2]](https://flask.palletsprojects.com/en/stable/blueprints/)
+  - Obs.: O arquivo principal já basta para a aplicação funcionar
+- Em seguida as rotas/endpoints devem ser criados
+  - Existem várias abordagens de se criar, a mais simples é criar diretamente na main usando a aplicação criada como anotação `@app.route()`
+  - Outra abordagem é fazer o uso de Blueprint [[2]](https://flask.palletsprojects.com/en/stable/blueprints/)
+    - instanciar Blueprint `bp = Blueprint()` (`api/**/**_route.py`)
+    - assim como anteriormente usar uma anotation para definir o endpoint `@bp.route()`
+    - registrar a blueprint no app `app.register_blueprint(bp, "/bp")` (`main.py`)
+
+## Geral
 
 ### Environment Variables
 
-- Instalar dependecias (`pip install python-dotenv`)
+- Instalar a lib (`pip install python-dotenv`)
 - Criar arquivo env (`.env`)
+- Obs.: Arquivos `.env` não devem ser commitados diretamente por possuirem dados sensíveis, logo deve se adicionar esse arquivo no `.gitignore`. Também é bom criar um arquivo `.env.example` que deixa claro quais váriaveis de ambiente o projeto necesseta. O que facilita algume roda-lo pela primeira vez.
+  **TBD: Aspas ou não Aspas**
 
-### Conexão com Banco de Dados
+### Banco de dados
 
-- Instalar dependencias (`pip install sqlalchemy pg8000`)
-- `sqlalchemy` para ORM e `pg8000` driver do banco usado
-- Criar um arquivo para conectar ao banco (`database.py`)
-  - Também pode ser feito no arquivo principal (`main.py`)
+#### SQL
 
-### Migrations [[3]](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
+##### ORM e Conectar no banco de dados
 
-- Adicionar a biblioteca de migrations ao projeto (`pip install alembic`)
-- Iniciar o alembic para criar a pasta de migrations (`alembic init migrations`)
-- Configurar o alembic
-  - Configurar url do banco (`alembic.ini`)
-  - Criar uma classe base (`models/base.py`)
-  - Essa classe base sera extendida por modelos (`models/*.py`)
-  - Essa classe também deve ser referenciada em (`migrations/env.py`)
-- Criar migrations
-  - Automaticamente (`alembic revision --autogenerate -m [message]`)
-  - Manualmente (`alembic revision -m [message]`)
-- Commitar mudança no banco (`alembic upgrade head`)
+- Escolher um ORM. Facilita comunicção com o BD. Middleware entre Classes e BD. (ex.: `sqlalchemy`)
+- Escolher um banco de dados e instalar o lib de coumunicação do banco (ex.: `pg8000`)
+  - Instalar dependências `pip install sqlalchemy pg8000`
+- SqlAlchemy [[]](https://docs.sqlalchemy.org/en/20/orm/quickstart.html)
+  - Definir modelos, criar classes python e mapear as tabelas do banco para essas classes (`/models/*.py`) [[]](https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html)
+  - Criar uma engine, ela vai ser a responsável por criar conexões com o banco de dados (`/database.py`) [[]](https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Engine)
+    - A engine disponibiliza `connection`, que é usada para executar instruções SQL
+    - Usando a engine e `Sessions`, é possivel fazer o mesmo que com `connection`, que é um versão mais nova [[]](https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html#tutorial-executing-orm-session)
 
-### Authentication [[4]](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)
+##### Migrations
 
-#### JWT Authentication [[21]](https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c)
+- Migrations é uma forma de controlar o versionamento do esquema de banco de dados [[3]](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
+- Escolher uma biblioteca para lidar com as migrations (ex.: `alembic`) [[]](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
+  - Instalar dependência `pip install alembic`
+  - Iniciar o ambiente alembic `alembic init migrations` (Obs.: migrations é apenas o nome que vai ser dado ao diretorio do alembic, no tutorial é `alembic init alembic`)
+  - Configurar URL do banco, se depende de `.env` definir em `migrations/env.py`, se url estática `alembic.ini` em `sqlalchemy.url`
+  - Criar uma classe base para os modelos (`models/base.py`) que extende `DeclarativeBase`
+  - A classe base sera para outros modelos (`models/*.py`)
+  - Essa classe também deve ser referenciada em `migrations/env.py` para dar valor ao `target_metadata`
+  - Em `migrations/env.py` o `config.set_main_option("sqlalchemy.url", "")` seta o valor da url do banco, podendo fazer uso de envs
+- Comandos para migrations
+  - Migration automatica (`alembic revision --autogenerate -m [message]`)
+  - Migration Manualm (`alembic revision -m [message]`)
+  - Commitar mudança no banco (`alembic upgrade head`)
 
-- Forma de autenticação stateless, servidor envia para o cliente um token com informações do usuário
+#### NoSQL
+
+- TBD
+
+### Authentication
+
+- Mecanismo de segurança da API [[4]](https://www.freecodecamp.org/news/jwt-authentication-in-flask/)
+
+#### JWT Authentication
+
+- Forma de autenticação stateless, servidor envia para o cliente um token com informações do usuário [[21]](https://medium.com/@rohitraj1912000/demystifying-authentication-and-authorization-in-backend-systems-52489c3fae8c)
 - Cliente usa esse token na requisição para obter recursos do servidor
 - Instalar dependencias `pip install flask-bcrypt Flask-JWT-Extended`
 - Instanciar jwt e setar as chaves `main.py`
@@ -86,6 +122,47 @@ $ flask --app src/main --debug run
 - Obs.: Decorators são um padrão de programação usados para adicionar funcionalidades a funções sem alterar suas estruturas [[26]](https://www.datacamp.com/tutorial/decorators-python)
 
 #### Attribute-Based Access Control (ABAC)
+
+- TODO
+
+### Tratamento de erros [[20]](https://dev.to/ctrlaltvictoria/backend-error-handling-practical-tips-from-a-startup-cto-h6)
+
+#### Geral
+
+- Importante para debug, resiliência, segurança e experiência do usuário
+- Centralized Error handling
+  - Facilita a leitura e manutenção do código
+  - Pode ser feito atráves de middleware
+- Custom Error Classes
+  - Divide erros em tipos customizáveis
+  - Error handling middleware pode ser comportar diferente dependendo do tipo do erro
+- Try/catch
+  - Básico do tratamento de erros
+  - É recomendadável tratar apenas erros conhecidos, deixando os desconhecidos para o error handling global
+
+#### Python [[21]](https://docs.python.org/3/tutorial/errors.html)
+
+- Exceptions
+- Erros detectados durante execução
+- Uma execção resulta em uma mensagem de erro quando não tratada
+- Handling Exceptions
+  - Código dentro de um `try` é executado mas se ocorre uma exceção que bate com o tipo no `exception` o bloco dele é executado
+  - `BaseException` é a classe base para todas as exceções
+  - `Exception` um subclasse de `BaseException` é a base para todas exceções não fatais
+- User-defined Exceptions
+  - Criadas a partir de classes geralmente extendendo `Exception` (direto ou indiretamente)
+  - Geralmente são simples e possuem atributos que permite inofrmações sobre o erro serem extraidas
+  - Por convenção podem terminar com o nome `Error`
+
+#### Flask [[22]](https://flask.palletsprojects.com/en/stable/errorhandling/)
+
+- O Flask por padrão já tem uma forma de lidar com exceções
+- Se uma execção não é tratada ele devolve uma página padrão com erro 500
+- É possível criar funções para lidar customizar como a mensagem de erro é enviada
+  - `app.register_error_handler(400, handle_bad_request)`: A função `handle_bad_request` trata o retorno quando ocorre um erro 400
+  - `app.register_error_handler(werkzeug.exceptions.HTTPException, handle_exception)`: Dessa forma é possível criar um retorno padrão para qualquer exceção HTTP
+- Para criar classes expecificas de erros HTTP, basta extender `werkzeug.exceptions.HTTPException`, e adicionar os atributos `code` e `description` (ex.: `global_error_handling.py`)
+- Com um handler global e classes de erros HTTP é possível retornar mensagens que facilitam compreender que erro ocorreu
 
 ### Testes [[5]](https://flask.palletsprojects.com/en/stable/testing/)[[6]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[7]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[10]](https://testdriven.io/blog/flask-pytest/)
 
@@ -134,6 +211,8 @@ $ flask --app src/main --debug run
 - Replica o comportamento de um usuário com todo o ambiente da aplicação
 
 ### Docker [[11]](https://www.freecodecamp.org/news/how-to-dockerize-a-flask-app/)
+
+(https://docs.docker.com/compose/how-tos/multiple-compose-files/) Multiplos compsoe
 
 - Criar `Dockerfile`
 - Seleciona versão do python (`FROM`)
