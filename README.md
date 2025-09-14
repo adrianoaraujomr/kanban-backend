@@ -56,16 +56,16 @@ $ flask --app src/main --debug run # inicia a aplicação
 - Escolher um ORM. Facilita comunicção com o BD. Middleware entre Classes e BD. (ex.: `sqlalchemy`)
 - Escolher um banco de dados e instalar o lib de coumunicação do banco (ex.: `pg8000`)
   - Instalar dependências `pip install sqlalchemy pg8000`
-- SqlAlchemy [[]](https://docs.sqlalchemy.org/en/20/orm/quickstart.html)
-  - Definir modelos, criar classes python e mapear as tabelas do banco para essas classes (`/models/*.py`) [[]](https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html)
-  - Criar uma engine, ela vai ser a responsável por criar conexões com o banco de dados (`/database.py`) [[]](https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Engine)
+- SqlAlchemy [[33]](https://docs.sqlalchemy.org/en/20/orm/quickstart.html)
+  - Definir modelos, criar classes python e mapear as tabelas do banco para essas classes (`/models/*.py`) [[34]](https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html)
+  - Criar uma engine, ela vai ser a responsável por criar conexões com o banco de dados (`/database.py`) [[35]](https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Engine)
     - A engine disponibiliza `connection`, que é usada para executar instruções SQL
-    - Usando a engine e `Sessions`, é possivel fazer o mesmo que com `connection`, que é um versão mais nova [[]](https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html#tutorial-executing-orm-session)
+    - Usando a engine e `Sessions`, é possivel fazer o mesmo que com `connection`, que é um versão mais nova [[36]](https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html#tutorial-executing-orm-session)
 
 ##### Migrations
 
 - Migrations é uma forma de controlar o versionamento do esquema de banco de dados [[3]](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
-- Escolher uma biblioteca para lidar com as migrations (ex.: `alembic`) [[]](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
+- Escolher uma biblioteca para lidar com as migrations (ex.: `alembic`) [[37]](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
   - Instalar dependência `pip install alembic`
   - Iniciar o ambiente alembic `alembic init migrations` (Obs.: migrations é apenas o nome que vai ser dado ao diretorio do alembic, no tutorial é `alembic init alembic`)
   - Configurar URL do banco, se depende de `.env` definir em `migrations/env.py`, se url estática `alembic.ini` em `sqlalchemy.url`
@@ -125,7 +125,7 @@ $ flask --app src/main --debug run # inicia a aplicação
 
 - TODO
 
-### Tratamento de erros [[20]](https://dev.to/ctrlaltvictoria/backend-error-handling-practical-tips-from-a-startup-cto-h6)
+### Tratamento de erros [[27]](https://dev.to/ctrlaltvictoria/backend-error-handling-practical-tips-from-a-startup-cto-h6)
 
 #### Geral
 
@@ -140,7 +140,7 @@ $ flask --app src/main --debug run # inicia a aplicação
   - Básico do tratamento de erros
   - É recomendadável tratar apenas erros conhecidos, deixando os desconhecidos para o error handling global
 
-#### Python [[21]](https://docs.python.org/3/tutorial/errors.html)
+#### Python [[28]](https://docs.python.org/3/tutorial/errors.html)
 
 - Exceptions
 - Erros detectados durante execução
@@ -154,7 +154,7 @@ $ flask --app src/main --debug run # inicia a aplicação
   - Geralmente são simples e possuem atributos que permite inofrmações sobre o erro serem extraidas
   - Por convenção podem terminar com o nome `Error`
 
-#### Flask [[22]](https://flask.palletsprojects.com/en/stable/errorhandling/)
+#### Flask [[29]](https://flask.palletsprojects.com/en/stable/errorhandling/)
 
 - O Flask por padrão já tem uma forma de lidar com exceções
 - Se uma execção não é tratada ele devolve uma página padrão com erro 500
@@ -163,6 +163,23 @@ $ flask --app src/main --debug run # inicia a aplicação
   - `app.register_error_handler(werkzeug.exceptions.HTTPException, handle_exception)`: Dessa forma é possível criar um retorno padrão para qualquer exceção HTTP
 - Para criar classes expecificas de erros HTTP, basta extender `werkzeug.exceptions.HTTPException`, e adicionar os atributos `code` e `description` (ex.: `global_error_handling.py`)
 - Com um handler global e classes de erros HTTP é possível retornar mensagens que facilitam compreender que erro ocorreu
+
+### Logging [[30]](https://flask.palletsprojects.com/en/stable/logging/)
+
+- Flask faz uso do logger padrão do python `logging`
+- Fazer uso do sistema padrão do python tem a vantagem de integrar seus logs com logs de bibliotecas
+- Níveis de logging [[31]](https://docs.python.org/3/library/logging.html)
+  - NOTSET (0): busca valor do log antecessor, senão todos eventos são logados
+  - DEBUG (10): informação detalhada (ambiente de desenvolvimento)
+  - INFO (20): confirma que tudo está funcionando como esperado
+  - WARNING (30): indicação de algo inesperado, ou que algo irá falhar no futuro
+  - ERROR (40): devido um erro algo não foi executado
+  - CRITICAL (50): um erro sério que pode levar a parada de execução do programa
+- É necessário configurar o logging no projeto antes de acessar `app.logging` senão uma configuração padrão será usada
+- A configuração é feita atráves do método `dictConfig` [[32]](https://betterstack.com/community/guides/logging/how-to-start-logging-with-flask/)
+  - `formatters`: define o padrão de formatação do log
+  - `handlers`: envia logs para diversos destinos
+  - `root`: define as configuração do log de `root`
 
 ### Testes [[5]](https://flask.palletsprojects.com/en/stable/testing/)[[6]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[7]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[10]](https://testdriven.io/blog/flask-pytest/)
 
@@ -303,5 +320,16 @@ $ docker build --tag [nome imagem] . # Monta a imagem
 [[22] https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).](<https://frontegg.com/guides/authorization-a-complete-guide#:~:text=Implement%20Authorization%20Policies&text=You%20can%20use%20various%20types,discretionary%20access%20control%20(DAC).>)  
 [[23] https://www.redhat.com/en/topics/security/what-is-role-based-access-control](https://www.redhat.com/en/topics/security/what-is-role-based-access-control)  
 [[24] https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html](https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html)  
-[[25] https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6](https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6)
-[[26] https://www.datacamp.com/tutorial/decorators-python](https://www.datacamp.com/tutorial/decorators-python)
+[[25] https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6](https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6)  
+[[26] https://www.datacamp.com/tutorial/decorators-python](https://www.datacamp.com/tutorial/decorators-python)  
+[[27]](https://dev.to/ctrlaltvictoria/backend-error-handling-practical-tips-from-a-startup-cto-h6)  
+[[28]](https://docs.python.org/3/tutorial/errors.html)  
+[[29]](https://flask.palletsprojects.com/en/stable/errorhandling/)  
+[[30]](https://flask.palletsprojects.com/en/stable/logging/)  
+[[31]](https://docs.python.org/3/library/logging.html)  
+[[32]](https://betterstack.com/community/guides/logging/how-to-start-logging-with-flask/)  
+[[33]](https://docs.sqlalchemy.org/en/20/orm/quickstart.html)  
+[[34]](https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html)  
+[[35]](https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Engine)  
+[[36]](https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html#tutorial-executing-orm-session)  
+[[37]](https://alembic.sqlalchemy.org/en/latest/tutorial.html)

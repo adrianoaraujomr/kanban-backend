@@ -1,4 +1,6 @@
 import json
+import logging
+
 from datetime import datetime
 from flask_jwt_extended import get_jwt_identity
 from sqlalchemy import select
@@ -32,6 +34,7 @@ def create_to_do_card(content):
         deadline=datetime.now()
     )
     Session = get_session()    
+    logging.info(f"Creating to-do card: {new_card.title}")
     with Session() as db_session:
         db_session.add(new_card)    
         db_session.commit()
