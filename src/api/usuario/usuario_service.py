@@ -1,5 +1,7 @@
 import hashlib
 import json
+import logging
+
 from flask_jwt_extended import create_access_token
 from sqlalchemy import select
 
@@ -10,6 +12,7 @@ from src.global_error_handling import WrongUsernameOrPassword, EntityNotFound
 def login(content):
     Session = get_session()
     with Session() as session:
+        logging.info(f"Searching for user with email: {content['username']}")
         query = select(User).where(User.email == content["username"])
         user = session.execute(query).first()
         if user is not None:
@@ -51,6 +54,7 @@ def create_user(content):
     hashed_password = hashlib.sha512(content["password"].encode()).hexdigest()
     new_user = User(content["name"], content["email"], hashed_password, avatar)
     Session = get_session()
+    logging.info(f"Creating user: {new_user.name}")
     with Session() as db_session:
         db_session.add(new_user)
         db_session.commit()
