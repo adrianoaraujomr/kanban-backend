@@ -181,6 +181,69 @@ $ flask --app src/main --debug run # inicia a aplicação
   - `handlers`: envia logs para diversos destinos
   - `root`: define as configuração do log de `root`
 
+### Observability
+
+- Logging, Tracing, Monitoring [[33]](https://medium.com/@vaibhavtiwari.945/backend-observability-made-simple-logging-tracing-and-monitoring-726baeb6d801)
+
+#### Logging: Loki + Grafana
+
+- Formatar logs e usar logs padrão do flask
+  - Na `main.py` antes de iniciar o flask setar `dictConfig` para definir o formato dos logs do flask
+  - Em seguida bastar usar o log padrão do python `import logging`, `logging.info()`, `logging.error()`, ...
+- Fazer upload dos logs para um serviço externo [[34]](https://medium.com/geekculture/pushing-logs-to-loki-without-using-promtail-fc31dfdde3c6)
+  - Infra: [[35]](https://medium.com/@habbema/come%C3%A7ando-com-grafana-loki-d87ea894f944)
+    - Adicionar um serviço para o `grafana` em `infra.yml`
+    - Criar um arquivo de configuração para o loki `loki/loki.config.yaml`
+    - Adicionar um serviço para o `loki` em `infra.yml`
+  - Código:
+    - Instalar biblioteca `python-logging-loki`
+    - Adicionar no `.env` url do servidor loki (`LOKI_URL`)
+    - Na `main.py` criar um handler para o loki `logging_loki.LokiHandler()` e adicioanr esse handler ao logging padrão `logging.getLogger().addHandler()`
+  - Grafana:
+    - Adicionar Loki como Data Source
+- Obs.: Mandar os logs diretamente para o loki não é a única forma de fazer isso. Também é possível usar `Promptail`, para ler os logs em formato json de arquivos e enviar para o loki [[36]](https://www.tothenew.com/blog/integrating-python-json-logger-with-grafana-and-loki-for-enhanced-logging/)
+
+#### Monitoring: Prometheus + Grafana
+
+- Prometheus vai buscar métricas na aplicação [[37]](https://medium.com/@MetricFire/use-grafana-to-monitor-flask-apps-with-prometheus-d687d6fdd799)
+  - Infra: [[38]](https://wearenotch.com/blog/building-and-monitoring-flask-application-with-prometheus-and-grafana/)
+    - Criar um arquivo de configuração para o prometheus `prometheus/prometheus.yml` nesse arquivo deve definir de onde o prometheus vai buscar as métricas
+      - Obs.: Se sua aplicação estiver em localhost e o prometheus for um container, o host de aplicação será `host.docker.internal`
+    - Adicioanr um serviço do prometheus no `infra.yml`
+      - Obs.: Para o container conseguir acessar localhost deve ser adicionado em `extra_hosts` o seguinte `host.docker.internal:host-gateway` [[39]](https://stackoverflow.com/questions/70505750/lookup-host-docker-internal-no-such-host)
+  - Código:
+    - Instalar a biblioteca `flask_prometheus_metrics`
+    - Subir no código um dispatcher que vai disponibilizar as métricas
+      - `register_metrics(app, app_version="1.0.0", app_config="staging")`
+      - `dispatcher = DispatcherMiddleware(app.wsgi_app, {"/metrics": make_wsgi_app()}`
+      - `run_simple(hostname="0.0.0.0", port=5000, application=dispatcher)`
+  - Grafana:
+    - Adicionar Prometheus como Data Source
+    - Criar dashboards a partir das métricas disponibilizadas
+      - Exemplo [[40]](https://grafana.com/grafana/dashboards/16111-flask-monitoring/)
+      - Alterar medida de bytes [[41]](https://community.grafana.com/t/need-help-with-converting-bytes-to-human-readable-format-in-grafana-table-panel/90496)[[42]](https://community.grafana.com/t/grafana-unit-for-mb-gb-etc/68495)
+      - Documetação Gauge [[43]](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/gauge/)
+      - Labels a partir de váriaves (https://community.grafana.com/t/how-to-change-dashboard-expression-display-while-using-prometheus/81629/2)
+
+#### Tracing: Jaeger
+
+- Configurar Docker compose [[34]](https://gist.github.com/denji/b801f19d95b7d7910982c22bb1478f96)
+
+- Criar um Dashboard Melhor
+- Criar README do Jaeger
+
+```
+https://www.jaegertracing.io/docs/2.10/getting-started/
+https://msalinas92.medium.com/integrating-a-python-api-with-jaeger-using-opentelemetry-3885e0c80db0
+https://last9.io/blog/opentelemetry-collector-with-docker/
+https://medium.com/insiderengineering/automatic-instrumentation-of-a-python-flask-application-using-opentelemetry-with-jaeger-be50f6530c23
+https://pypi.org/project/opentelemetry-instrumentation/
+```
+
+```
+opentelemetry-instrument --traces_exporter otlp --metrics_exporter otlp --logs_exporter otlp --service_name flask-sample-server flask --app src/main run
+```
+
 ### Testes [[5]](https://flask.palletsprojects.com/en/stable/testing/)[[6]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[7]](https://www.digitalocean.com/community/tutorials/unit-test-in-flask)[[10]](https://testdriven.io/blog/flask-pytest/)
 
 - Adicionar a biblioteca pytest ao projeto (`pip install pytest`)
