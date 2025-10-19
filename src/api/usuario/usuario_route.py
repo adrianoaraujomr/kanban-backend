@@ -6,6 +6,12 @@ from src.decorators.auth import role_authorization
 
 usuario_route = Blueprint("usuario", __name__)
 
+@usuario_route.route("/", methods=["POST"], strict_slashes=False)
+def create_user_route():
+    content = request.json
+    result = create_user(content)
+    return Response(json.dumps(result), status=201, mimetype="application/json")
+
 @usuario_route.route("/login", methods=["POST"], strict_slashes=False)
 def login_user_route():
     content = request.json
@@ -18,10 +24,3 @@ def login_user_route():
 def list_users_route():
     result = list_users()
     return Response(json.dumps(result), status=200, mimetype="application/json")
-
-
-@usuario_route.route("/", methods=["POST"], strict_slashes=False)
-def create_user_route():
-    content = request.json
-    result = create_user(content)
-    return Response(json.dumps(result), status=201, mimetype="application/json")
