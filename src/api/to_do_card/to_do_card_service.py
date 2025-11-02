@@ -2,11 +2,14 @@ import json
 import logging
 
 from datetime import datetime
+from typing import List
+from flask import abort
 from flask_jwt_extended import get_jwt_identity
 from sqlalchemy import select
 
 from src.database import get_session
 from src.models.to_do_card import ToDoCard
+from src.integrations.github import github_adapter
 
 def list_to_do_card():
     Session = get_session()
@@ -39,3 +42,12 @@ def create_to_do_card(content):
         db_session.add(new_card)    
         db_session.commit()
     return content
+
+def list_issues(owner, repository) -> List[dict]:
+    return [issue.__dict__ for issue in github_adapter.get_issues_from_repo(owner, repository)]
+
+def create_issue(owner, repository, issue) -> dict:
+    issue = github_adapter.create_issue(owner, repository, issue)
+    if issue is None:
+        abort(500, "Something went wrong")
+    return issue.__dict__

@@ -38,6 +38,13 @@ $ flask --app src/main --debug run # inicia a aplicação
     - assim como anteriormente usar uma anotation para definir o endpoint `@bp.route()`
     - registrar a blueprint no app `app.register_blueprint(bp, "/bp")` (`main.py`)
 
+### Serialization/Validation
+
+```
+https://www.geeksforgeeks.org/python/flask-serialization-and-deserialization/
+https://www.cameronmacleod.com/blog/better-validation-flask-marshmallow
+```
+
 ## Geral
 
 ### Environment Variables
@@ -163,6 +170,7 @@ $ flask --app src/main --debug run # inicia a aplicação
   - `app.register_error_handler(werkzeug.exceptions.HTTPException, handle_exception)`: Dessa forma é possível criar um retorno padrão para qualquer exceção HTTP
 - Para criar classes expecificas de erros HTTP, basta extender `werkzeug.exceptions.HTTPException`, e adicionar os atributos `code` e `description` (ex.: `global_error_handling.py`)
 - Com um handler global e classes de erros HTTP é possível retornar mensagens que facilitam compreender que erro ocorreu
+- É possivel dar raise em erros Http atraves da função `abort` do flask [[XX]](https://stackoverflow.com/questions/38862144/flask-cannot-raise-http-exception-after-try-catching-runtime-error)
 
 ### Logging [[30]](https://flask.palletsprojects.com/en/stable/logging/)
 
@@ -293,6 +301,16 @@ $ docker build --tag [nome imagem] . # Monta a imagem
   - Aguardar o postgres subir
   - Inicializar o banco de dados
   - Testar a aplicação
+
+### Python
+
+```
+https://gist.github.com/ruimaranhao/4e18cbe3dad6f68040c32ed6709090a3
+https://docs.python.org/3/library/typing.html
+https://dev.to/izabelakowal/some-ideas-on-how-to-implement-dtos-in-python-be3
+https://hackernoon.com/dto-in-python-an-explanation
+https://realpython.com/python-kwargs-and-args/
+```
 
 # Refs
 
