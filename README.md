@@ -40,10 +40,13 @@ $ flask --app src/main --debug run # inicia a aplicação
 
 ### Serialization/Validation
 
-```
-https://www.geeksforgeeks.org/python/flask-serialization-and-deserialization/
-https://www.cameronmacleod.com/blog/better-validation-flask-marshmallow
-```
+- Serialização é o processo de convert dados complexos como classes para objetos como JSON e XML [[39]](https://www.geeksforgeeks.org/python/flask-serialization-and-deserialization/)
+- Flask da suporte a serialização de deserilização porem não da suporte a validação desses dados
+- Uma alternativa é a bilbioteca `marshmallow` [[38]](https://www.cameronmacleod.com/blog/better-validation-flask-marshmallow)
+  - Para instalar basta executar `pip install flask-marshmallow `
+  - Para validar é possivel criar uma classe nova que extenda `Schema`
+  - Dentro da classe criada definimos os atributos e usando o `fields` definimos as regras validação ex.: `title = fields.Str(required=True)`
+  - Com uma instância da classe que criamos podemos usar o método `validate` para validar os dados recebidos ex.: `Schema.validate(request.json)`
 
 ## Geral
 
@@ -304,13 +307,25 @@ $ docker build --tag [nome imagem] . # Monta a imagem
 
 ### Python
 
-```
-https://gist.github.com/ruimaranhao/4e18cbe3dad6f68040c32ed6709090a3
-https://docs.python.org/3/library/typing.html
-https://dev.to/izabelakowal/some-ideas-on-how-to-implement-dtos-in-python-be3
-https://hackernoon.com/dto-in-python-an-explanation
-https://realpython.com/python-kwargs-and-args/
-```
+#### Requets
+
+- O python ou flask não possuem um biblioteca nativa para fazer requisições
+- Para fazer requisições é necessário instalar a biblioteca `requests` [[40]](https://realpython.com/python-requests/)
+  - Para instalar basta rodar `pip install requests`
+- Com `requests` é possivel fazer requisições chamando os metodos `get, put, post, patch, delete`
+- Com os parametros `data` e `json` é possível mandar um body [[41]](https://stackoverflow.com/questions/9733638/how-to-post-json-data-with-python-requests)
+  - `data` envia dados como strings
+  - `json` aceita dicionarios python
+  - `url` parametro para mandar url
+  - `headers` aceita dicionario com headers
+
+#### Solução de problemas
+
+- Guia para boas práticas de python [[43]](https://gist.github.com/ruimaranhao/4e18cbe3dad6f68040c32ed6709090a3)
+- Serializar enums para json [[42]](https://stackoverflow.com/questions/24481852/serialising-an-enum-member-to-json)
+- Implementar DTOs em python [[45]](https://dev.to/izabelakowal/some-ideas-on-how-to-implement-dtos-in-python-be3)[[46]](https://hackernoon.com/dto-in-python-an-explanation)
+- Uso de kwargs e args [[47]](https://realpython.com/python-kwargs-and-args/)
+- Tipagem de retorno [[44]](https://docs.python.org/3/library/typing.html)
 
 # Refs
 
@@ -340,14 +355,24 @@ https://realpython.com/python-kwargs-and-args/
 [[24] https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html](https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html)  
 [[25] https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6](https://blog.stackademic.com/implementing-role-based-access-control-rbac-in-flask-f7e69db698f6)  
 [[26] https://www.datacamp.com/tutorial/decorators-python](https://www.datacamp.com/tutorial/decorators-python)  
-[[27]](https://dev.to/ctrlaltvictoria/backend-error-handling-practical-tips-from-a-startup-cto-h6)  
-[[28]](https://docs.python.org/3/tutorial/errors.html)  
-[[29]](https://flask.palletsprojects.com/en/stable/errorhandling/)  
-[[30]](https://flask.palletsprojects.com/en/stable/logging/)  
-[[31]](https://docs.python.org/3/library/logging.html)  
-[[32]](https://betterstack.com/community/guides/logging/how-to-start-logging-with-flask/)  
-[[33]](https://docs.sqlalchemy.org/en/20/orm/quickstart.html)  
-[[34]](https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html)  
-[[35]](https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Engine)  
-[[36]](https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html#tutorial-executing-orm-session)  
-[[37]](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
+[[27] https://dev.to/ctrlaltvictoria/backend-error-handling-practical-tips-from-a-startup-cto-h6](https://dev.to/ctrlaltvictoria/backend-error-handling-practical-tips-from-a-startup-cto-h6)  
+[[28] https://docs.python.org/3/tutorial/errors.html](https://docs.python.org/3/tutorial/errors.html)  
+[[29] https://flask.palletsprojects.com/en/stable/errorhandling/](https://flask.palletsprojects.com/en/stable/errorhandling/)  
+[[30] https://flask.palletsprojects.com/en/stable/logging/](https://flask.palletsprojects.com/en/stable/logging/)  
+[[31] https://docs.python.org/3/library/logging.html](https://docs.python.org/3/library/logging.html)  
+[[32] https://betterstack.com/community/guides/logging/how-to-start-logging-with-flask/](https://betterstack.com/community/guides/logging/how-to-start-logging-with-flask/)  
+[[33] https://docs.sqlalchemy.org/en/20/orm/quickstart.html](https://docs.sqlalchemy.org/en/20/orm/quickstart.html)  
+[[34] https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html](https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html)  
+[[35] https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Engine](https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Engine)  
+[[36] https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html#tutorial-executing-orm-session](https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html#tutorial-executing-orm-session)  
+[[37] https://alembic.sqlalchemy.org/en/latest/tutorial.html](https://alembic.sqlalchemy.org/en/latest/tutorial.html)  
+[[38] https://www.cameronmacleod.com/blog/better-validation-flask-marshmallow](https://www.cameronmacleod.com/blog/better-validation-flask-marshmallow)  
+[[39] https://www.geeksforgeeks.org/python/flask-serialization-and-deserialization/](https://www.geeksforgeeks.org/python/flask-serialization-and-deserialization/)  
+[[40] https://realpython.com/python-requests/](https://realpython.com/python-requests/)  
+[[41] https://stackoverflow.com/questions/9733638/how-to-post-json-data-with-python-requests](https://stackoverflow.com/questions/9733638/how-to-post-json-data-with-python-requests)  
+[[42] https://stackoverflow.com/questions/24481852/serialising-an-enum-member-to-json](https://stackoverflow.com/questions/24481852/serialising-an-enum-member-to-json)  
+[[43] https://gist.github.com/ruimaranhao/4e18cbe3dad6f68040c32ed6709090a3](https://gist.github.com/ruimaranhao/4e18cbe3dad6f68040c32ed6709090a3)
+[[44] https://docs.python.org/3/library/typing.html](https://docs.python.org/3/library/typing.html)  
+[[45] https://dev.to/izabelakowal/some-ideas-on-how-to-implement-dtos-in-python-be3](https://dev.to/izabelakowal/some-ideas-on-how-to-implement-dtos-in-python-be3)  
+[[46] https://hackernoon.com/dto-in-python-an-explanation](https://hackernoon.com/dto-in-python-an-explanation)
+[[47] https://realpython.com/python-kwargs-and-args/](https://realpython.com/python-kwargs-and-args/)
