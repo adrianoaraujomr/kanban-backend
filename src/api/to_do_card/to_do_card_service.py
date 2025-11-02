@@ -10,6 +10,7 @@ from sqlalchemy import select
 from src.database import get_session
 from src.models.to_do_card import ToDoCard
 from src.integrations.github import github_adapter
+from src.integrations.github.enum.lock_enum import LockReason
 
 def list_to_do_card():
     Session = get_session()
@@ -51,3 +52,17 @@ def create_issue(owner, repository, issue) -> dict:
     if issue is None:
         abort(500, "Something went wrong")
     return issue.__dict__
+
+def get_issue(owner, repository, issue_number) -> dict:
+    issue = github_adapter.get_issue_from_repo(owner, repository, issue_number)
+    return issue.__dict__
+
+def update_issue(owner, repository, issue_number, issue) -> dict:
+    issue = github_adapter.update_issue(owner, repository, issue_number, issue)
+    if issue is None:
+        abort(500, "Something went wrong")
+    return issue.__dict__
+
+def delete_issue(owner, repository, issue_number) -> bool:
+    result = github_adapter.lock_issue(owner, repository, issue_number, LockReason.SPAM)
+    return result
